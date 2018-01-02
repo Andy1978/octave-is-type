@@ -1,0 +1,40 @@
+// Copyright (C) 2017 Andreas Weber <andy@josoansi.de>
+//
+// Helper script to build a table with bool is* functions
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License as
+// published by the Free Software Foundation; either version 3 of the
+// License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+// General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, see
+// <http://www.gnu.org/licenses/>.
+
+#include <octave/oct.h>
+#include <octave/oct-map.h>
+#include <octave/Cell.h>
+#include <iostream>
+
+using namespace std;
+
+DEFUN_DLD (check_type, args,, "check_type (obj)")
+{
+  int nargs = args.length ();
+
+  if (nargs != 1)
+    print_usage ();
+
+  octave_scalar_map ret;
+  ret.assign ("class_name", args(0).class_name ());
+  ret.assign ("type_name", args(0).type_name ());
+
+  // gen_cc_code.m generated code go
+
+  return ovl (ret);
+}

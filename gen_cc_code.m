@@ -30,8 +30,16 @@ while (! feof (fid))
     if (! isempty (t))
 
       t = t{1}{1};
-      # Generate calls for is* functions
-      fprintf (fid_out, '  ret.assign ("%s", args(0).%s());\n', t, t);
+      exclude = !isempty (regexp (t, "function|classdef|is_defined", "match"));
+
+      if (! exclude)
+        # Generate calls for is* functions
+        fprintf (fid_out, '  try\n  {\n');
+        fprintf (fid_out, '    ret.assign ("%s", args(0).%s());\n', t, t);
+        fprintf (fid_out, '  }\n  catch (...)\n  {\n');
+        fprintf (fid_out, '    ret.assign ("%s", -1);\n', t);
+        fprintf (fid_out, '  }\n\n');
+      endif
       
     endif
 

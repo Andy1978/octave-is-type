@@ -1,36 +1,27 @@
-  // einfach mal alle "is"
-  // egrep "bool is_[a-z_]* (void)" libinterp/octave-value/ov.h | sed s/bool//g
-  
-  
-  
-  
-\documentclass{article}
-\usepackage{array,graphicx}
-\usepackage{booktabs}
-\usepackage{pifont}
+# octave-is-type
 
-\newcommand*\rot{\rotatebox{90}}
-\newcommand*\OK{\ding{51}}
+Source to create a table with GNU Octave
 
-\begin{document}
+    bool octave_value::is_... (void)
 
-\begin{table} \centering
-    \begin{tabular}{@{} cl*{10}c @{}}
-        & & \multicolumn{10}{c}{Knowledge Areas} \\[2ex]
-        & & \rot{Integration} & \rot{Scope} & \rot{Time} & \rot{Cost} 
-        & \rot{Quality} & \rot{Human Resource} & \rot{Communication} 
-        & \rot{Risk} & \rot{Procurement} & \rot{\shortstack[l]{Stakeholder\\Management}} \\
-        \cmidrule{2-12}
-        %insert here
-        & Initiating             & \OK &   &   &   &   &   & \OK &   &   & \OK \\
-        & Planning               & \OK & \OK & \OK & \OK & \OK & \OK & \OK & \OK & \OK & \OK \\
-        & Executing              & \OK &   &   &   & \OK & \OK & \OK &   & \OK & \OK \\
-        & Monitoring and Control & \OK & \OK & \OK & \OK & \OK &   & \OK & \OK & \OK & \OK \\
- \rot{\rlap{~Processes}}
-        & Closing                & \OK &   &   &   &   &   & \OK &   & \OK & \OK \\
-        \cmidrule[1pt]{2-12}
-    \end{tabular}
-    \caption{Some caption}
-\end{table}
+functions. Only interesting if you want to develop something using the GNU Octave C++ API
 
-\end{document}
+## Tweaks
+
+You have to adapt OCTAVE_ROOT in Makefile to point to your source directory
+and set the version (currently 4.3.0+).
+
+## dependencies
+
+GNU Octave with mkoctfile, g++, pdflatex, octave-forge statistics
+
+## Side note
+
+If you want to start using the C++ API liboctave here are some links to useful resources:
+
+* [chapter "Oct-Files" in the GNU Octave manual](https://www.gnu.org/software/octave/doc/interpreter/Oct_002dFiles.html#Oct_002dFiles)
+* [Doxygen generated documentation of liboctave](http://wiki.octave.org/Doxygen)
+* [Manually generated class overview for liboctave on the wiki](http://wiki.octave.org/Project_liboctave_4.2)
+* [C++ Tips and Tricks section on the wiki](http://wiki.octave.org/Tips_and_tricks#C.2B.2B) has a table with quivalent C++ code. Very usefull if you already know the m-file syntax
+* [C++ code styleguide on the wiki](http://wiki.octave.org/C%2B%2B_style_guide)
+* [Developer page on the wiki](http://wiki.octave.org/Developers)

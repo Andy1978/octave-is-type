@@ -22,11 +22,11 @@ last_line_was_deprecated = false;
 while (! feof (fid))
 
   l = fgetl (fid);
-  
+
   dep = ! isempty (regexp (l, 'OCTAVE_DEPRECATED', "tokens"));
   if (! last_line_was_deprecated)
     t = regexp (l, 'bool (is[a-z_]*) \(void\)', "tokens");
-    
+
     if (! isempty (t))
 
       t = t{1}{1};
@@ -40,7 +40,7 @@ while (! feof (fid))
         fprintf (fid_out, '    ret.assign ("%s", -1);\n', t);
         fprintf (fid_out, '  }\n\n');
       endif
-      
+
     endif
 
   endif

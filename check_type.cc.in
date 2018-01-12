@@ -35,7 +35,7 @@ DEFUN_DLD (check_type, args,, "check_type (obj)")
   ret.assign ("type_name", args(0).type_name ());
   ret.assign ("dims", args(0).dims ().str ());
 
-  // gen_cc_code.m generated code go
+  // gen_cc_code.m generated code goes here
 
   return ovl (ret);
 }

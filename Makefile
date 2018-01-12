@@ -2,13 +2,15 @@
 
 MKOCTFILE= mkoctfile-4.3.0+
 OCTAVE= octave-4.3.0+
+
+# FIXME: howto find sourcecode?
 OCTAVE_ROOT= ../octave-src
 
 TARGETS= check_type.oct check_type.cc check_type.tex check_type.pdf
 
 all: $(TARGETS)
 
-check_type.cc: gen_cc_code.m ../octave-src/libinterp/octave-value/ov.h check_type.cc.in
+check_type.cc: gen_cc_code.m $(OCTAVE_ROOT)/libinterp/octave-value/ov.h check_type.cc.in
 	$(OCTAVE) -f -q $^ $@
 
 %.oct: %.cc

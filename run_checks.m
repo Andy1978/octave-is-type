@@ -1,7 +1,26 @@
+## Copyright (C) 2017 Andreas Weber <andy@josoansi.de>
+##
+## Helper script to build a table with bool is* functions
+##
+## This program is free software; you can redistribute it and/or
+## modify it under the terms of the GNU General Public License as
+## published by the Free Software Foundation; either version 3 of the
+## License, or (at your option) any later version.
+##
+## This program is distributed in the hope that it will be useful, but
+## WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+## General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with this program; if not, see
+## <http://www.gnu.org/licenses/>.
+
 clear all
 
 in = {"[]",
       "{}",
+      "zeros (1, 0)",
       "1.23",
       "1+2i",
       "int8(1)", 
@@ -31,15 +50,13 @@ pkg load statistics
 result = [result{:}];
 f = fieldnames (result)(4:end-1);
 for k = 1:numel (f)
-
-  ## errors are marked with -1
+  ## FIXME: errors are marked with -1, find a better way
   tmp = [result.(f{k})];
   err(k, :) = tmp < 0;
   tmp(tmp < 0) = 0;
   b(k, :) = tmp;
 endfor
 
-##
 function perm = stree (tree)
 
   m = rows (tree);
@@ -47,39 +64,36 @@ function perm = stree (tree)
   t = (1:m)';
   nc = max(tree(:,1:2)(:));
 
-  % Vector with the horizontal and vertical position of each cluster
   p = zeros (nc,2);
-
   perm = zeros (n,1);
 
-  %% Ordering by depth-first search
-  nodecount = 0;
-  nodes_to_visit = nc+1;
-  while !isempty(nodes_to_visit)
-    currentnode = nodes_to_visit(1);
-    nodes_to_visit(1) = [];
-    if currentnode > n
-      node = currentnode - n;
-      nodes_to_visit = [tree(node,[2 1]) nodes_to_visit];
-    end
+  ncounter = 0;
+  n_left = nc+1;
+  while (! isempty (n_left))
+    cn = n_left(1);
+    n_left(1) = [];
+    if cn > n
+      node = cn - n;
+      n_left = [tree(node,[2 1]) n_left];
+    endif
 
-    if currentnode <= n && p(currentnode,1) == 0
-      nodecount +=1;
-      p(currentnode,1) = nodecount;
-      perm(nodecount) = currentnode;
-    end
+    if cn <= n && p(cn,1) == 0
+      ncounter++;
+      p(cn,1) = ncounter;
+      perm(ncounter) = cn;
+    endif
 
-  end
+  endwhile
+
 endfunction
 
 Y = pdist (b.');
 T = linkage (Y);
 perm_in = stree (T);
 
-####
 perm_chk = stree (linkage (pdist (b)));
 
-# create table
+## create table
 template = fileread ("check_type.tex.in");
 
 ## Find target line for generated code
@@ -107,21 +121,21 @@ endfor
 fprintf (fid_out, "\\\\\n");
 fprintf (fid_out, "\\hline\n");
 
-# class_name
+## class_name
 fprintf (fid_out, 'class\\_name ');
 for j = 1:numel(in)
   fprintf (fid_out, '& \\rot{%s} ', latex_escape(result(perm_in(j)).class_name));
 endfor
 fprintf (fid_out, '\\\\ \\hline \n');
 
-# type_name
+## type_name
 fprintf (fid_out, 'type\\_name ');
 for j = 1:numel(in)
   fprintf (fid_out, '& \\rot{%s} ', latex_escape(result(perm_in(j)).type_name));
 endfor
 fprintf (fid_out, '\\\\ \\hline \n');
 
-# rows
+## rows
 for k = 1:numel (f)
   fn = f(perm_chk){k};
   r = [result(perm_in).(fn)];
@@ -132,11 +146,6 @@ for k = 1:numel (f)
     if (err(perm_chk(k), perm_in(j)))
       fprintf (fid_out, "\\cellcolor{red!50} err");
     else
-      %~ if (r(j))
-        %~ fprintf (fid_out, "\\cellcolor{green!20} ");
-      %~ else
-        %~ fprintf (fid_out, "\\cellcolor{yellow!20} ");
-     %~ endif
      fprintf (fid_out, '%s ', ifelse (r(j), '\OK', ' '));
     endif
   endfor

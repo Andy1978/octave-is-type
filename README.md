@@ -4,7 +4,9 @@ Source to create a table with GNU Octave
 
     bool octave_value::is_... (void)
 
-functions. Only interesting if you want to develop something using the GNU Octave C++ API
+functions: [https://josoansi.de/files/check_type.pdf](https://josoansi.de/files/check_type.pdf)
+
+Only interesting if you want to develop something using the GNU Octave C++ API
 
 ## Tweaks
 
